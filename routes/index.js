@@ -12,6 +12,9 @@ router.get('/author', function(req, res, next) {
   res.render('author');
 });
 
+// Autoload de rutas que usen :quizId
+router.param('quizId', quizController.load);  // autoload :quizId
+
 
 // Definición de rutas de /quizzes
 router.get('/quizzes',                     quizController.index);
