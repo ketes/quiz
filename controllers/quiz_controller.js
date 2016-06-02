@@ -30,6 +30,9 @@ if (req.query.search) {
 });
 
  } else {
+	var format = req.params.format || '';
+
+	if (format === 'html' || format === ''){
 	models.Quiz.findAll()
 		.then(function(quizzes) {
 			res.render('quizzes/index.ejs', { quizzes: quizzes});
@@ -37,7 +40,21 @@ if (req.query.search) {
 		.catch(function(error) {
 			next(error);
 		});
+	}
+	else if(format === 'json'){
+	models.Quiz.findAll()
+		.then(function(quizzes) {
+			res.send(JSON.stringify(quizzes));
+		})
+		.catch(function(error) {
+			next(error);
+		});
+	}
+	else{
+		throw new Error("Error de formato");
+	}
   }
+
 };
 
 
@@ -45,9 +62,15 @@ if (req.query.search) {
 exports.show = function(req, res, next) {
 
 	var answer = req.query.answer || '';
-
-	res.render('quizzes/show', {quiz: req.quiz,
+	var format = req.params.format || '';
+	
+	if (format === 'html' || format === ''){
+		res.render('quizzes/show', {quiz: req.quiz,
 								answer: answer});
+	}
+	else if(format === 'json'){
+		res.send(JSON.stringify(req.quiz));
+	}
 };
 
 
