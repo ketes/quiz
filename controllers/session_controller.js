@@ -1,5 +1,6 @@
 
 var userController = require('./user_controller');
+var logoutTime = 120000;
 
 // Middleware: Se requiere hacer login.
 //
@@ -45,7 +46,7 @@ exports.create = function(req, res, next) {
 
 	        // Crear req.session.user y guardar campos id y username
 	        // La sesión se define por la existencia de: req.session.user
-	        req.session.user = {id:user.id, username:user.username, isAdmin:user.isAdmin};
+	        req.session.user = {id:user.id, username:user.username, isAdmin:user.isAdmin, logoutDate:Date.now() + logoutTime };
 
 	        res.redirect(redir); // redirección a la raiz
 		})
@@ -62,4 +63,18 @@ exports.destroy = function(req, res, next) {
     delete req.session.user;
     
     res.redirect("/session"); // redirect a login
+};
+
+
+exports.caduca = function(req, res, next) {
+	if(req.session.user){
+		if(req.session.user.logoutDate < Date.now()){
+			delete req.session.user;
+			req.flash('info', 'La sesión ha caducado.');
+		}
+		else{
+			req.session.user.logoutDate = Date.now() + logoutTime;
+		}
+	}
+	next();
 };
