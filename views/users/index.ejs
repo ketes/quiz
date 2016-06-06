@@ -20,13 +20,20 @@
       <tr>
          <td> <%= users[i].username %>  </td>
          <td> <%= users[i].isAdmin ? "Si" : "No" %> </td>
+	 <td> <a href="/users/<%= users[i].id %>" > Ver </a>
          <% if (session.user) { %>
-           <td> <a href="/users/<%= users[i].id %>" > Ver </a>
+		<% if (session.user.isAdmin || session.user.id === users[i].id) { %>
                 <a href="/users/<%= users[i].id %>/edit"> Editar </a>
+		<% } %>
+
+		<% if (session.user.isAdmin && session.user.id !== users[i].id) { %>
+
                 <a href="/users/<%= users[i].id %>?_method=DELETE" 
                    onClick="return confirm('Borrar cuenta: <%= users[i].username %>');" >
                    Borrar </a> 
            </td>
+
+		<% } %>
          <% } %>
       </tr>
     <%  }; %>

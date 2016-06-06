@@ -25,8 +25,6 @@
         <td>
            <a href="/quizzes/<%= quizzes[i].id %>"><%= quizzes[i].question %></a>
         </td>
-	<td>
-           <a href="/quizzes/<%= quizzes[i].id %>/edit"><button>editar</button></a>
 
         <% if (session.user) { %>
            <% if (session.user.isAdmin || session.user.id === quizzes[i].AuthorId) { %>
